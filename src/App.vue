@@ -2,10 +2,13 @@
   <div class="app">
     <Sidebar />
    <router-view/>
+   <Popup />
   </div>
 </template>
 <script setup>
   import Sidebar from './components/Sidebar.vue';
+  import Popup from './components/Popup.vue';
+//   import '../helper/circletext.js';
 </script>
 <style lang="scss">
 :root {
@@ -34,6 +37,8 @@ button {
 	background: none;
 }
 .app {
+	position: relative;
+	width: 100vw;
 	display: flex;
 	main {
 		flex: 1 1 0;
