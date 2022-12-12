@@ -5,13 +5,21 @@
         <div>
             <input v-model="getText" />
         </div>
-        <div class="circle-wrapper">
+        <div id="coin">
+          <UploadImage />
+          <div class="circle-wrapper">
             <p class="circle"></p>
             <div class="circle-image">
                 <img src="img/coin.png"  alt="">
             </div>
         </div>
+        </div>
+        
+        
+        
+        <button @click="makeOrder">Создать заказ</button>
         <div class="d-none">{{myVal}}</div>
+        <div id="result"></div>
     </main>
 </template>
 
@@ -20,7 +28,6 @@
   width: 300px;
   height: 300px;
   position: relative;
-  margin: 0px auto;
   .circle {
     position: absolute;
     width: 107px;
@@ -56,24 +63,73 @@
     object-fit: contain;
   }
 }
+.d-none {
+  display: none;
+}
 </style>
 
-<script setup>
-import { ref } from "vue";
+<script>
+// import { ref } from "vue";
+// import { computed } from "vue";
+
+
+// let getText = ref("hELLO");
+
+// const myVal = computed({
+//   get() {
+//     if (document.querySelector(".circle")) {
+//       document.querySelector(".circle").innerHTML =
+//         getText.value
+//           .split("")
+//           .map((e, i) => {
+//             const fontSize = 14;
+//             const start = Number(
+//               (-getText.value.length / 16) * 90
+//             );
+//             return `<span style="--rot:${
+//               start + i * 12
+//             }deg; font-size: ${fontSize}px">${e}</span>`;
+//           })
+//           .join("");
+//     }
+//     return getText.value;
+//   },
+//   set(val) {
+//     getText.value = val;
+//   },
+// });
+
+import {ref} from 'vue'
 import { computed } from "vue";
-
-let getText = ref("hELLO");
-
-const myVal = computed({
-  get() {
-    if (document.querySelector(".circle")) {
+import UploadImage from '../components/UploadImage.vue';
+    export default {
+        data() {
+        return {
+            getText: "Hello",
+            myVal: null
+        }
+        },
+        components: {
+          UploadImage
+        },
+        methods: {
+          makeOrder() {
+            html2canvas(document.getElementById("coin")).then(function(canvas) {
+              let myscreen = canvas;
+              document.getElementById("result").appendChild(myscreen);
+            })
+          }
+        },
+        computed: {
+          myVal() {
+            if (document.querySelector(".circle")) {
       document.querySelector(".circle").innerHTML =
-        getText.value
+        this.getText
           .split("")
           .map((e, i) => {
             const fontSize = 14;
             const start = Number(
-              (-getText.value.length / 16) * 90
+              (-this.getText.length / 16) * 90
             );
             return `<span style="--rot:${
               start + i * 12
@@ -81,10 +137,9 @@ const myVal = computed({
           })
           .join("");
     }
-    return getText.value;
-  },
-  set(val) {
-    getText.value = val;
-  },
-});
+          return this.getText;
+          }
+        },
+
+    }
 </script>

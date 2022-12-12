@@ -1,0 +1,92 @@
+<template lang="">
+        <div>
+           <input ref="fileUploaded" type="file" @input="onFileSelected">
+        </div>
+        <div :class="{'visible': this.previewImage}" class="image-preview" @click="selectImage">
+            <svg width="0px" height="0px"
+                        xmlns="http://www.w3.org/2000/svg"
+                        xmlns:xlink="http://www.w3.org/1999/xlink">
+                    <filter id="light">
+                        <!-- VARIANT1 -->
+                        <!-- blur the source image to make bump map less sharp -->
+                        <!-- <feGaussianBlur stdDeviation="7" result="blurred"></feGaussianBlur> -->
+                        <!-- create bump map based on alpha channel -->
+                        <!-- <feColorMatrix in="blurred" type="luminanceToAlpha" result="bumpMap"></feColorMatrix> -->
+                        <!-- use bump map for lighting filter -->
+                        <!-- <feDiffuseLighting in="bumpMap" surfaceScale="8" result="light">
+                        <fePointLight x="225" y="150" z="120"></fePointLight>
+                        </feDiffuseLighting> -->
+                        <!-- compose the lighting result with source image using multiplication -->
+                        <!-- <feComposite in="light" in2="SourceGraphic"
+                        operator="arithmetic"
+                        k1="1" k2="0" k3="0" k4="0" result="bump">
+                        </feComposite>
+                        <feColorMatrix type="saturate" values="0" x="0%" y="0%" width="100%" height="100%" in="bump" result="colormatrix"/> -->
+
+                        <!-- VARIANT2-->
+                        <feColorMatrix type="luminanceToAlpha" />
+                        <feDiffuseLighting diffuseConstant="1" surfaceScale="1" result="diffuse3">
+                        <fePointLight x="50" y="25" z="15"/> 
+                        <feDistantLight elevation="30" azimuth="200" /></feDiffuseLighting>  
+                    </filter>
+            </svg>
+            <img v-bind:src="previewImage">
+        </div>
+</template>
+
+<script>
+import { ref } from "vue";
+export default {
+    data() {
+        return {
+            previewImage: null,
+        };
+    },
+
+    methods: {
+        selectImage() {
+            this.$refs.fileUploaded.click();
+        },
+        onFileSelected(event) {
+            // console.log(event.target.files[0])
+            let file = this.$refs.fileUploaded.files;
+            if (file && file[0]) {
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    this.previewImage = e.target.result;
+                };
+                reader.readAsDataURL(file[0]);
+                // this.$emit('input', file[0])
+            }
+        },
+    },
+    watch: {},
+};
+</script>
+
+<style lang="scss" scoped>
+.image-preview {
+    display: none;
+    width: 220px;
+    height: 220px;
+    left: 0;
+    top: 0;
+    transform: translate(200px, 170px);
+    transform-origin: center;
+    overflow: hidden;
+    position: absolute;
+    z-index: 1000;
+    border-radius: 50%;
+
+    &.visible {
+        display: block;
+    }
+
+    & img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        filter: url(#light);
+    }
+}
+</style>
