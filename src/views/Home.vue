@@ -15,11 +15,18 @@
         </div>
         </div>
         
-        
-        
         <button @click="makeOrder">Создать заказ</button>
         <div class="d-none">{{myVal}}</div>
-        <div id="result"></div>
+        <div id="result"><canvas></canvas><img class="result-image"></div>
+
+        <div id="result">
+          <div class="circle-wrapper">
+            <p class="circle"></p>
+            <div class="circle-image">
+                <img src="img/coin.png"  alt="">
+            </div>
+        </div>
+        </div>
     </main>
 </template>
 
@@ -114,16 +121,34 @@ import UploadImage from '../components/UploadImage.vue';
         },
         methods: {
           makeOrder() {
-            html2canvas(document.getElementById("coin")).then(function(canvas) {
-              let myscreen = canvas;
-              document.getElementById("result").appendChild(myscreen);
-            })
+            // html2canvas(document.getElementById("coin")).then(function(canvas) {
+            //   canvas.className = "test";
+            //   let myscreen = canvas;
+            //   document.getElementById("result").appendChild(myscreen);
+            // })
+            var canvas = document.querySelector('canvas');
+            var svg = document.querySelector('#coin-svg');
+            var xml = new XMLSerializer().serializeToString(svg);
+            var svg64 = btoa(xml);
+            var b64Start = 'data:image/svg+xml;base64,';
+            var image64 = b64Start + svg64;
+
+            var img = document.querySelector('.result-image');
+            
+            img.onload = function() {
+              
+              // draw the image onto the canvas
+              canvas.getContext('2d').drawImage(img, 0, 0);
+            }
+            img.src = image64;
+
+
           }
         },
         computed: {
           myVal() {
             if (document.querySelector(".circle")) {
-      document.querySelector(".circle").innerHTML =
+              document.querySelector(".circle").innerHTML =
         this.getText
           .split("")
           .map((e, i) => {

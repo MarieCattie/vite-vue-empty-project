@@ -3,7 +3,7 @@
            <input ref="fileUploaded" type="file" @input="onFileSelected">
         </div>
         <div :class="{'visible': this.previewImage}" class="image-preview" @click="selectImage">
-            <svg width="0px" height="0px"
+            <svg id="coin-svg" viewBox="0 0 300 300" width="100%" 
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink">
                     <filter id="light">
@@ -29,8 +29,9 @@
                         <fePointLight x="50" y="25" z="15"/> 
                         <feDistantLight elevation="30" azimuth="200" /></feDiffuseLighting>  
                     </filter>
+                     <image filter="url(#light)" v-bind:href="previewImage" width="100%" x="0" y="0"></image>
             </svg>
-            <img v-bind:src="previewImage">
+
         </div>
 </template>
 
@@ -64,14 +65,18 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+#coin {
+    display: inline-block;
+    position: relative;
+}
 .image-preview {
     display: none;
     width: 220px;
     height: 220px;
-    left: 0;
-    top: 0;
-    transform: translate(200px, 170px);
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -46%);
     transform-origin: center;
     overflow: hidden;
     position: absolute;
