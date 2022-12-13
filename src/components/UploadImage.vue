@@ -3,7 +3,7 @@
            <input ref="fileUploaded" type="file" @input="onFileSelected">
         </div>
         <div :class="{'visible': this.previewImage}" class="image-preview" @click="selectImage">
-            <svg id="coin-svg" viewBox="0 0 300 300" width="100%" 
+            <svg id="coin-svg" viewBox="0 0 300 300" width="220px" 
                         xmlns="http://www.w3.org/2000/svg"
                         xmlns:xlink="http://www.w3.org/1999/xlink">
                     <filter id="light">
@@ -74,9 +74,9 @@ export default {
     display: none;
     width: 220px;
     height: 220px;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -46%);
+    left: 14%;
+    top: 19%;
+  /*  transform: translate(-50%, -46%);*/
     transform-origin: center;
     overflow: hidden;
     position: absolute;
@@ -88,8 +88,8 @@ export default {
     }
 
     & img {
-        width: 100%;
-        height: 100%;
+        width: 220px;
+        height: 220px;
         object-fit: cover;
         filter: url(#light);
     }

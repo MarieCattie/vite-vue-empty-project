@@ -17,9 +17,14 @@
         
         <button @click="makeOrder">Создать заказ</button>
         <div class="d-none">{{myVal}}</div>
-        <div id="result"><canvas></canvas><img class="result-image"></div>
 
-        <div id="result">
+        <div>
+          <img class="result-image"> <canvas></canvas>
+        </div>
+       
+
+        <div  id="result">
+          <div class="image-preview image-preview--result"></div>
           <div class="circle-wrapper">
             <p class="circle"></p>
             <div class="circle-image">
@@ -27,6 +32,7 @@
             </div>
         </div>
         </div>
+        <div id="resultcanvas"></div>
     </main>
 </template>
 
@@ -73,6 +79,23 @@
 .d-none {
   display: none;
 }
+#result {
+  width: 300px;
+  height: 300px;
+  position: relative;
+}
+.image-preview--result {
+  display: block;
+  left: 14%;
+    top: 13%;
+}
+#resultcanvas {
+  position: relative;
+}
+.canvaImg {
+  /* position: absolute;
+  border-radius: 50%; */
+}
 </style>
 
 <script>
@@ -113,7 +136,8 @@ import UploadImage from '../components/UploadImage.vue';
         data() {
         return {
             getText: "Hello",
-            myVal: null
+            myVal: null,
+            showResult: null
         }
         },
         components: {
@@ -121,11 +145,8 @@ import UploadImage from '../components/UploadImage.vue';
         },
         methods: {
           makeOrder() {
-            // html2canvas(document.getElementById("coin")).then(function(canvas) {
-            //   canvas.className = "test";
-            //   let myscreen = canvas;
-            //   document.getElementById("result").appendChild(myscreen);
-            // })
+
+            this.showResult = true;
             var canvas = document.querySelector('canvas');
             var svg = document.querySelector('#coin-svg');
             var xml = new XMLSerializer().serializeToString(svg);
@@ -141,6 +162,19 @@ import UploadImage from '../components/UploadImage.vue';
               canvas.getContext('2d').drawImage(img, 0, 0);
             }
             img.src = image64;
+
+            document.querySelector('.image-preview--result').innerHTML = `<img class="image-preview__image">`;
+            var imgResult = document.querySelector('.image-preview__image');
+            imgResult.src = image64;
+
+
+
+            html2canvas(document.querySelector("#result")).then(function(canvas) {
+              canvas.className = "test";
+              let myscreen = canvas;
+              document.getElementById("resultcanvas").appendChild(myscreen);
+              window.open(canvas.toDataURL('image/png'));
+            })
 
 
           }
