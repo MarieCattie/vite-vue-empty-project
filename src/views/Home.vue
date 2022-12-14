@@ -1,42 +1,229 @@
 <template lang="">
     <main class="home-page">
-        <h1>Конструктор монет</h1>
-        <p class="posttitle">Создайте уникальный дизайн и оформите заказ</p>
+      
+      <div class="constructor-head">
         <div>
-            <input v-model="getText" />
+          <h1>Конструктор монет</h1>
+          <p class="posttitle">Создайте уникальный дизайн и оформите заказ</p>
         </div>
-        <div id="coin">
-          <UploadImage />
-          <div class="circle-wrapper">
-            <p class="circle"></p>
-            <div class="circle-image">
-                <img src="img/coin.png"  alt="">
+        <button class="make-order" @click="makeOrder"> <p>Создать заказ</p></button>
+      </div>
+       
+        <div class="constructor">
+          <div class="constructor__side constructor__workarea">
+            <div id="coin">
+              <UploadImage :previewImage="previewImage" />
+              <div class="circle-wrapper">
+                <p class="circle"></p>
+                <div class="circle-image">
+                    <img ref="constructorImage" v-bind:src="photo"  alt="">
+                </div>
             </div>
+            </div>
+            <div :class="{'hide': isHideResult}" class="modal-wrapper">
+              <div class="modal-wrapper__content">
+                <div :class="{'hide': isHideResult}" ref="result" id="result">
+                  <div class="image-preview image-preview--result"></div>
+                  <div class="circle-wrapper">
+                    <p class="circle"></p>
+                    <div class="circle-image">
+                      <img v-bind:src="photo"  alt="">
+                    </div>
+                </div>
+                </div>
+                <p>Заказ оформлен</p>
+              </div>
+            </div>
+            
+          </div>
+          <div class="constructor__side constructor__settings">
+            <div class="settings-block">
+              <div class="settings-block__group">
+                <p class="settings-block__label">Текст на монете</p>
+                <input class="settings-block__field" v-model="getText" />
+              </div>
+              <div class="settings-block__group">
+                <p class="settings-block__label">Размер шрифта</p>
+                <input class="settings-block__field" v-model="getSize" type="number" />
+              </div>
+              
+          </div>
+          <div class="settings-block">
+            <div>
+              <p class="settings-block__label">Фото на монете</p>
+              <input class="settings-block__field" ref="fileUploaded" type="file" @input="onFileSelected">
+           </div>
+            
         </div>
+        <div class="settings-block settings-block--fixsize">
+          <div class="settings-block__variantes">
+            <div @click="setSilver"> <img src="img/coin.png" alt=""> </div>
+            <div @click="setGold"> <img src="img/coin2.png" alt=""> </div>
+         </div>
+          
+      </div>
+          
+          </div>
         </div>
         
-        <button @click="makeOrder">Создать заказ</button>
+        
         <div class="d-none">{{myVal}}</div>
 
         <div>
-          <img class="result-image"> <canvas></canvas>
+          <!-- <img class="result-image"> <canvas></canvas> -->
         </div>
        
 
-        <div  id="result">
-          <div class="image-preview image-preview--result"></div>
-          <div class="circle-wrapper">
-            <p class="circle"></p>
-            <div class="circle-image">
-                <img src="img/coin.png"  alt="">
-            </div>
-        </div>
-        </div>
-        <div id="resultcanvas"></div>
+       
+        <div style="display: none;" id="resultcanvas"></div>
     </main>
 </template>
 
 <style lang="scss">
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+.home-page {
+  position: relative;
+}
+.modal-wrapper {
+  width: 100vw; height: 100vh;
+  z-index: 1000;
+  position: fixed;
+  top: 0;
+  left: 0;
+  background-color: rgba(41, 37, 37, 0.342);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  &.hide {
+    display: none;
+  }
+
+  &__content {
+    width: 400px;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+}
+.settings-block {
+  overflow: hidden;
+  min-width: 468px;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 5px 6px 10px 0px rgb(193 201 209 / 64%), -2px -1px 8px 3px white;
+  border: 1px solid white;
+  margin-bottom: 30px;
+
+
+
+  &__group {
+    margin-bottom: 20px;
+  }
+  &__variantes {
+    max-width: 468px;
+    padding: 20px;
+    overflow-x: scroll;
+    overflow-y: hidden;
+    display: flex;
+    & div {
+      padding: 10px;
+      border-radius: 10px;
+      width: 200px;
+      height: 200px;
+      overflow: hidden;
+      flex-shrink: 0;
+      transition: all .3s ease-in;
+      background-color: var(--light);
+      box-shadow: inset -3px -3px 7px #ffffff, inset 2px 2px 5px rgb(136 165 191 / 38%);
+
+      &:not(:last-of-type) {
+        margin-right: 10px;
+      }
+      &:hover {
+        cursor: pointer;
+        box-shadow: 5px 6px 10px 0px rgb(193 201 209 / 64%), -2px -1px 8px 3px rgba(187, 187, 187, 0.712);
+      }
+      & img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
+      }
+    }
+  }
+  &__label {
+    font-weight: 600;
+    color: transparent;
+    background: #656b70;
+    -webkit-background-clip: text;
+    -moz-background-clip: text;
+    background-clip: text;
+    text-shadow: 0px 3px 3px rgba(255,255,255,0.5);
+    margin-bottom: 7px;
+  }
+}
+.settings-block__field {
+  font-size: 14px;
+  display: block;
+  border-radius: 8px;
+  outline: none;
+  background: 
+    linear-gradient(var(--light) 0 0) padding-box, /*this is your grey background*/
+    linear-gradient(130.18deg, #FFFFFF 35.92%, rgba(55, 83, 111, 0.4) 190.57%) border-box;
+  padding: 5px 16px;
+  border: 2px solid transparent;
+  box-shadow: inset -3px -3px 7px #FFFFFF, inset 2px 2px 5px rgba(136, 165, 191, 0.38);
+  transition: background 0.3s ease;
+
+  &:focus {
+    background: 
+    linear-gradient(var(--light) 0 0) padding-box, /*this is your grey background*/
+    linear-gradient(to right bottom, #F5C21B, #D17000) border-box;
+    
+}
+
+
+}
+.make-order {
+  padding: 10px 30px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#F5C21B), to(#D17000));
+  font-weight: 600;
+  color: #F5C21B;
+  border-radius: 5px;
+  box-shadow: 5px 6px 10px 0px rgb(193 201 209 / 64%), -2px -1px 8px 3px white;
+
+  & p {
+    font-weight: 600;
+    color: #FFF;
+  }
+}
+.constructor-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.constructor {
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+
+  &__workarea {
+    flex: 1 0 60%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &__settings {
+    margin-right: 16px;
+    flex: 1 0 40%;
+  }
+}
 .posttitle {
   font-size: 14px;
   margin-top: 8px;
@@ -58,6 +245,7 @@
     top: 32px;
     color: rgba(0, 0, 0, 1);
     font-weight: bolder;
+    mix-blend-mode: overlay;
     
     span {
       display: inline-block;
@@ -87,6 +275,13 @@
   width: 300px;
   height: 300px;
   position: relative;
+  top: 0; left: 0;
+  margin-bottom: 20px;
+
+  &.hide {
+    display: none;
+  }
+
 }
 .image-preview--result {
   display: block;
@@ -139,18 +334,23 @@ import UploadImage from '../components/UploadImage.vue';
     export default {
         data() {
         return {
-            getText: "Hello",
+            getText: "",
+            getSize: 12,
             myVal: null,
             showResult: null,
+            previewImage: null,
+            isHideResult: true,
+            photo: "img/coin.png"
         }
         },
         components: {
           UploadImage
         },
         methods: {
-          makeOrder() {
-
-            this.showResult = true;
+           makeOrder() {
+            this.isHideResult = !this.isHideResult
+            setTimeout(() => {
+               this.showResult = true;
             var canvas = document.querySelector('canvas');
             var svg = document.querySelector('#coin-svg');
             var xml = new XMLSerializer().serializeToString(svg);
@@ -158,14 +358,14 @@ import UploadImage from '../components/UploadImage.vue';
             var b64Start = 'data:image/svg+xml;base64,';
             var image64 = b64Start + svg64;
 
-            var img = document.querySelector('.result-image');
+            // var img = document.querySelector('.result-image');
             
-            img.onload = function() {
+            // img.onload = function() {
               
               // draw the image onto the canvas
-              canvas.getContext('2d').drawImage(img, 0, 0);
-            }
-            img.src = image64;
+              // canvas.getContext('2d').drawImage(img, 0, 0);
+            // }
+            // img.src = image64;
 
             document.querySelector('.image-preview--result').innerHTML = `<img class="image-preview__image">`;
             var imgResult = document.querySelector('.image-preview__image');
@@ -184,9 +384,30 @@ import UploadImage from '../components/UploadImage.vue';
               let index = Math.floor(Math.random() * (1000 - 100 + 1) + 100);
               localStorage.setItem(`order-${index}`, JSON.stringify({photo: dataURL}));
             })
+           
+            }, 1000)
 
 
-          }
+          },
+
+        onFileSelected(event) {
+            // console.log(event.target.files[0])
+            let file = this.$refs.fileUploaded.files;
+            if (file && file[0]) {
+                let reader = new FileReader();
+                reader.onload = (e) => {
+                    this.previewImage = e.target.result;
+                };
+                reader.readAsDataURL(file[0]);
+                // this.$emit('input', file[0])
+            }
+        },
+        setGold() {
+          this.photo = "img/coin2.png"
+        },
+        setSilver() {
+          this.photo = "img/coin.png"
+        }
         },
         computed: {
           myVal() {
@@ -196,7 +417,7 @@ import UploadImage from '../components/UploadImage.vue';
         this.getText
           .split("")
           .map((e, i) => {
-            const fontSize = 14;
+            const fontSize = this.getSize;
             const start = Number(
               (-this.getText.length / 16) * 90
             );

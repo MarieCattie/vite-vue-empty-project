@@ -1,7 +1,5 @@
 <template lang="">
-        <div>
-           <input ref="fileUploaded" type="file" @input="onFileSelected">
-        </div>
+        
         <div :class="{'visible': this.previewImage}" class="image-preview" @click="selectImage">
             <svg id="coin-svg" viewBox="0 0 300 300" width="220px" 
                         xmlns="http://www.w3.org/2000/svg"
@@ -40,25 +38,13 @@ import { ref } from "vue";
 export default {
     data() {
         return {
-            previewImage: null,
+            
         };
     },
-
+    props: ['previewImage'],
     methods: {
         selectImage() {
             this.$refs.fileUploaded.click();
-        },
-        onFileSelected(event) {
-            // console.log(event.target.files[0])
-            let file = this.$refs.fileUploaded.files;
-            if (file && file[0]) {
-                let reader = new FileReader();
-                reader.onload = (e) => {
-                    this.previewImage = e.target.result;
-                };
-                reader.readAsDataURL(file[0]);
-                // this.$emit('input', file[0])
-            }
         },
     },
     watch: {},
@@ -75,7 +61,7 @@ export default {
     width: 220px;
     height: 220px;
     left: 14%;
-    top: 19%;
+    top: 13%;
   /*  transform: translate(-50%, -46%);*/
     transform-origin: center;
     overflow: hidden;
