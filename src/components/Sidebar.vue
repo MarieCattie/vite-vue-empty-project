@@ -1,7 +1,7 @@
 <template lang="">
     <aside :class="`${is_expanded ? 'is-expanded' : ''}`">
        <div class="logo">
-        <img src="../assets/vue.svg" alt="">
+        <img src="../assets/coin_logo.png" alt="">
        </div>
        <div class="menu-toggle-wrap">
             <button class="menu-toggle" @click="ToggleMenu">
@@ -10,15 +10,15 @@
                     </span>
             </button>
        </div>
-       <h3>Menu</h3>
+       <h3>Меню</h3>
        <div class="menu">
             <router-link class="button" to="/">
-                <span class="material-icons">home</span>
-                <span class="text">Home</span>
+                <span class="material-icons">palette</span>
+                <span class="text">Создание монеты</span>
             </router-link>
             <router-link class="button" to="/about">
-                <span class="material-icons">visibility</span>
-                <span class="text">About</span>
+                <span class="material-icons">receipt_long</span>
+                <span class="text">Мои заказы</span>
             </router-link>
             
             
@@ -38,6 +38,9 @@
 </script>
 
 <style lang="scss" scoped>
+h3 {
+  margin-bottom: 20px;
+}
 aside {
   display: flex;
   flex-direction: column;
@@ -69,6 +72,8 @@ aside {
             transition: .2s ease-out;
         }
         .text {
+            display: inline-block;
+            margin-left: 20px;
             color: var(--light);
             transition: .2s ease-out;
         }

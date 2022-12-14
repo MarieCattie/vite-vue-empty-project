@@ -1,8 +1,6 @@
 <template lang="">
         <div v-if="!hidden" class="popup">
             <div class="popup__inner">
-                <input id="textPopup" />
-                <button @click="change">Изменить</button>
                 <p class="popup__text">{{popup}}</p>
                 <button @click="close">
                     <span class="material-icons material-symbols-outlined">
@@ -19,7 +17,7 @@
     export default {
         data() {
         return {
-            hidden: false,
+            hidden: true,
             popup: null
         }
         },

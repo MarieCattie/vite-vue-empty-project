@@ -1,7 +1,7 @@
 <template lang="">
     <main class="home-page">
-        <h1>Home</h1>
-        <p>This is home page</p>
+        <h1>Конструктор монет</h1>
+        <p class="posttitle">Создайте уникальный дизайн и оформите заказ</p>
         <div>
             <input v-model="getText" />
         </div>
@@ -37,6 +37,10 @@
 </template>
 
 <style lang="scss">
+.posttitle {
+  font-size: 14px;
+  margin-top: 8px;
+}
 .circle-wrapper {
   width: 300px;
   height: 300px;
@@ -137,7 +141,7 @@ import UploadImage from '../components/UploadImage.vue';
         return {
             getText: "Hello",
             myVal: null,
-            showResult: null
+            showResult: null,
         }
         },
         components: {
@@ -172,8 +176,13 @@ import UploadImage from '../components/UploadImage.vue';
             html2canvas(document.querySelector("#result")).then(function(canvas) {
               canvas.className = "test";
               let myscreen = canvas;
+              var dataURL = canvas.toDataURL("image/png");
               document.getElementById("resultcanvas").appendChild(myscreen);
-              window.open(canvas.toDataURL('image/png'));
+
+              // var newTab = window.open('about:blank','image from canvas');
+              // newTab.document.write("<img src='" + dataURL + "' alt='from canvas'/>");
+              let index = Math.floor(Math.random() * (1000 - 100 + 1) + 100);
+              localStorage.setItem(`order-${index}`, JSON.stringify({photo: dataURL}));
             })
 
 
@@ -181,8 +190,9 @@ import UploadImage from '../components/UploadImage.vue';
         },
         computed: {
           myVal() {
-            if (document.querySelector(".circle")) {
-              document.querySelector(".circle").innerHTML =
+            var circles = document.querySelectorAll('.circle')
+            circles.forEach((circle) => {
+              circle.innerHTML =
         this.getText
           .split("")
           .map((e, i) => {
@@ -195,7 +205,11 @@ import UploadImage from '../components/UploadImage.vue';
             }deg; font-size: ${fontSize}px">${e}</span>`;
           })
           .join("");
-    }
+            })
+              
+
+            
+
           return this.getText;
           }
         },
