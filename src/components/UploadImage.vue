@@ -27,12 +27,12 @@
                         <fePointLight x="50" y="25" z="15"/> 
                         <feDistantLight elevation="30" azimuth="200" /></feDiffuseLighting>   -->
 
-                        <feDiffuseLighting id="svg-filter-lighting" diffuseConstant="1" surfaceScale="1.5" result="diffuse3" lighting-color="#ffd16c" in="colormatrix">
+                        <feDiffuseLighting id="svg-filter-lighting" diffuseConstant="1" surfaceScale="1.5" result="diffuse3" lighting-color="#fff" in="colormatrix">
                             <fePointLight x="150" y="125" z="85"></fePointLight>
                             <feDistantLight elevation="30" azimuth="200"></feDistantLight>
                         </feDiffuseLighting>
                     </filter>
-                     <image  filter="url(#light)" v-bind:href="previewImage" width="100%" x="0" y="0"></image>
+                     <image id="svgImage"  filter="url(#light)" v-bind:href="previewImage" width="100%" x="0" y="0"></image>
             </svg>
 
         </div>
@@ -46,7 +46,8 @@ export default {
             
         };
     },
-    props: ['previewImage'],
+    props: ['previewImage', 'width'],
+
     methods: {
         selectImage() {
             this.$refs.fileUploaded.click();

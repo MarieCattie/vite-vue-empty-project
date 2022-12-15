@@ -11,8 +11,14 @@
        
         <div class="constructor">
           <div class="constructor__side constructor__workarea">
+            <div class="constructor__image-type">
+              <div @click="setGraving" :class="{'active': type.graving}">Гравировка</div>
+              <div @click="setColorPrint" :class="{'active': type.colorPrint}">Цветная печать</div>
+              <!-- <div>3</div> -->
+
+            </div>
             <div id="coin">
-              <UploadImage :previewImage="previewImage" />
+              <UploadImage :width="100" :previewImage="previewImage" />
               <div class="circle-wrapper">
                 <p class="circle"></p>
                 <div class="circle-image">
@@ -51,15 +57,15 @@
           </div>
           <div class="settings-block">
             <div>
-              <p class="settings-block__label">Фото на монете</p>
+              <p class="settings-block__label">Изображение на монете</p>
               <input class="settings-block__field" ref="fileUploaded" type="file" @input="onFileSelected">
            </div>
             
         </div>
         <div class="settings-block settings-block--fixsize">
           <div class="settings-block__variantes">
-            <div @click="setSilver"> <img src="img/coin.png" alt=""> </div>
-            <div @click="setGold"> <img src="img/coin2.png" alt=""> </div>
+            <div :class="{'active': design.silver}" @click="setSilver"> <img src="img/coin.png" alt=""> </div>
+            <div :class="{'active': design.gold}" @click="setGold"> <img src="img/coin2.png" alt=""> </div>
          </div>
           
       </div>
@@ -67,12 +73,25 @@
         
           <p class="settings-block__label">Перемещение изображения</p>
           <div class="settings-block__controls">
-              <button class="btn">1</button>
-              <button class="btn">2</button>
-              <button class="btn">3</button>
-              <button class="btn">4</button>
+              <button class="btn material-icons" @click="imageLeft">chevron_left</button>
+              <button class="btn material-icons" @click="imageTop">expand_less</button>
+              <button class="btn material-icons" @click="imageRight">chevron_right</button>
+              <button class="btn material-icons" @click="imageBottom">expand_more</button>
           </div>
     </div>
+    <div class="settings-block">
+        
+      <div class="settings-block__group">
+        <p class="settings-block__label">Ширина изображения</p>
+        <input class="settings-block__range" type="range" max="1000" min="10" step="1" value="100" @input="changeWidth" />
+      </div>
+      <div class="settings-block__group">
+        <p class="settings-block__label">Высота изображения</p>
+        <input class="settings-block__range" type="range" max="1000" min="10" step="1" value="100" @input="changeHeight" />
+
+      </div>
+      
+</div>
           
           </div>
         </div>
@@ -133,6 +152,8 @@
     align-items: center;
   }
 }
+
+
 .settings-block {
   overflow: hidden;
   min-width: 468px;
@@ -142,10 +163,41 @@
   border: 1px solid white;
   margin-bottom: 30px;
 
+  &__range {
+
+    width: 100%;
+    -webkit-appearance: none !important;
+    background: linear-gradient(8.37deg, #FFFFFF -30.86%, #ECF1F7 -10.72%, #CFDCEB 112.31%);
+    box-shadow: inset -4px -4px 7px rgba(255, 255, 255, 0.7), inset 4px 4px 6px rgba(18, 46, 101, 0.15);
+    border-radius: 31px;
+    height:16px;
+
+    &::-webkit-slider-thumb {
+      -webkit-appearance: none !important;
+      background: linear-gradient(89.72deg, #F0F4F9 -4.95%, #587CA5 578.66%);
+      box-shadow: -1px 2px 2px rgba(24, 55, 91, 0.1), inset 0px 0px 4px rgba(46, 68, 87, 0.02), inset 0px -2px 1px rgba(39, 81, 126, 0.12);
+      backdrop-filter: blur(14px);
+      border-radius: 50%;
+      height:33px;
+      width:33px;
+      cursor: pointer;
+    }
+
+  }
   &__controls {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+
+    & .btn {
+      color: #fff;
+
+       &:not(:last-of-type) {
+      margin-right: 10px;
+      
+    }
+    }
+    
+   
   }
 
   &__group {
@@ -165,8 +217,14 @@
       overflow: hidden;
       flex-shrink: 0;
       transition: all .3s ease-in;
-      background-color: var(--light);
-      box-shadow: inset -3px -3px 7px #ffffff, inset 2px 2px 5px rgb(136 165 191 / 38%);
+      background: var(--light);
+      box-shadow: -4px -2px 16px #eaeaeb, 4px 2px 16px rgba(136, 165, 191, 0.48);
+
+
+      &.active {
+        background-color: var(--light);
+        box-shadow: inset -3px -3px 7px #ffffff, inset 2px 2px 5px rgb(136 165 191 / 38%);
+      }
 
       &:not(:last-of-type) {
         margin-right: 10px;
@@ -239,11 +297,41 @@
   justify-content: space-between;
 
   &__workarea {
+    position: relative;
     flex: 1 0 60%;
     display: flex;
     align-items: center;
     justify-content: center;
   }
+
+  &__image-type {
+    width: 90%;
+    position: absolute;
+    top: 30px; left: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+
+    & div {
+      cursor: pointer;
+      flex: 1 0 auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 10px;
+      background: var(--light);
+      box-shadow: -4px -2px 16px #eaeaeb, 4px 2px 16px rgba(136, 165, 191, 0.48);
+
+      &.active{
+        background: var(--light);
+      box-shadow: inset -3px -3px 7px #ffffff, inset 2px 2px 5px rgb(136 165 191 / 38%);
+
+      }
+    }
+
+  }
+
   &__settings {
     margin-right: 16px;
     flex: 1 0 40%;
@@ -364,7 +452,16 @@ import UploadImage from '../components/UploadImage.vue';
             showResult: null,
             previewImage: null,
             isHideResult: true,
-            photo: "img/coin.png"
+            photo: "img/coin.png",
+            width: 100,
+            design: {
+              gold: false,
+              silver: true
+            },
+            type: {
+              graving: true,
+              colorPrint: false
+            }
         }
         },
         components: {
@@ -428,17 +525,54 @@ import UploadImage from '../components/UploadImage.vue';
         },
         setGold() {
           this.photo = "img/coin2.png"
+          this.design.silver = false
+          this.design.gold = true
           $('.circle-wrapper p.circle').css({'color': 'rgb(100 75 3)'})
           $('#svg-filter-lighting').attr('lighting-color', '#ffd16c')
         },
         setSilver() {
           this.photo = "img/coin.png"
+          this.design.silver = true
+          this.design.gold = false
           $('.circle-wrapper p.circle').css({'color': 'rgb(0 0 0)'})
           $('#svg-filter-lighting').attr('lighting-color', '#fff')
         },
         modalClose() {
           this.isHideResult = true;
-        }
+        },
+        imageLeft() {
+          let x = +$('#svgImage').attr('x')
+          $('#svgImage').attr('x', x-2)
+        },
+        imageRight() {
+          let x = +$('#svgImage').attr('x')
+          $('#svgImage').attr('x', x+2)
+        },
+        imageTop() {
+          let y = +$('#svgImage').attr('y')
+          $('#svgImage').attr('y', y-2)
+        },
+        imageBottom() {
+          let y = +$('#svgImage').attr('y')
+          $('#svgImage').attr('y', y+2)
+        },
+        changeWidth(event) {
+          $('#svgImage').attr('width', `${event.target.value}%`)
+        },
+        changeHeight(event) {
+          $('#svgImage').attr('height', `${event.target.value}%`)
+        },
+        setGraving() {
+          this.type.graving = true
+          this.type.colorPrint = false
+          $('#svgImage').attr('filter', 'url(#light)')
+        },
+        setColorPrint() {
+          this.type.graving = false
+          this.type.colorPrint = true
+          $('#svgImage').attr('filter', '')
+
+        },
         },
         computed: {
           myVal() {
@@ -458,10 +592,6 @@ import UploadImage from '../components/UploadImage.vue';
           })
           .join("");
             })
-              
-
-            
-
           return this.getText;
           }
         },
