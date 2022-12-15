@@ -6,7 +6,7 @@
           <h1>Конструктор монет</h1>
           <p class="posttitle">Создайте уникальный дизайн и оформите заказ</p>
         </div>
-        <button class="make-order" @click="makeOrder"> <p>Создать заказ</p></button>
+        <button class="make-order btn" @click="makeOrder"> <p>Создать заказ</p></button>
       </div>
        
         <div class="constructor">
@@ -22,6 +22,7 @@
             </div>
             <div :class="{'hide': isHideResult}" class="modal-wrapper">
               <div class="modal-wrapper__content">
+                <a @click="modalClose" class="modal-wrapper__close material-icons">close</a>
                 <div :class="{'hide': isHideResult}" ref="result" id="result">
                   <div class="image-preview image-preview--result"></div>
                   <div class="circle-wrapper">
@@ -62,6 +63,16 @@
          </div>
           
       </div>
+      <div class="settings-block">
+        
+          <p class="settings-block__label">Перемещение изображения</p>
+          <div class="settings-block__controls">
+              <button class="btn">1</button>
+              <button class="btn">2</button>
+              <button class="btn">3</button>
+              <button class="btn">4</button>
+          </div>
+    </div>
           
           </div>
         </div>
@@ -98,11 +109,21 @@
   display: flex;
   justify-content: center;
   align-items: center;
+  transition: all .5s ease-in;
   &.hide {
     display: none;
   }
 
+  &__close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    color: red;
+    cursor: pointer;
+  }
+
   &__content {
+    position: relative;
     width: 400px;
     padding: 30px;
     background-color: #fff;
@@ -121,7 +142,11 @@
   border: 1px solid white;
   margin-bottom: 30px;
 
-
+  &__controls {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
 
   &__group {
     margin-bottom: 20px;
@@ -190,7 +215,7 @@
 
 
 }
-.make-order {
+.btn {
   padding: 10px 30px;
   background: -webkit-gradient(linear, left top, left bottom, from(#F5C21B), to(#D17000));
   font-weight: 600;
@@ -244,8 +269,7 @@
     left: 50px;
     top: 32px;
     color: rgba(0, 0, 0, 1);
-    font-weight: bolder;
-    mix-blend-mode: overlay;
+    font-weight: 900;
     
     span {
       display: inline-block;
@@ -255,7 +279,7 @@
       text-align: center;
       height: 320px;
       top: -39px;
-      text-shadow: 0px 2px 1px rgb(255 255 255 / 50%), 0px 1px 0px rgb(255 255 255 / 75%);
+      text-shadow:0px 4px 3px rgb(255 255 255 / 42%), 0px 1px 6px rgb(255 255 255 / 75%);
     }
   }
 }
@@ -404,9 +428,16 @@ import UploadImage from '../components/UploadImage.vue';
         },
         setGold() {
           this.photo = "img/coin2.png"
+          $('.circle-wrapper p.circle').css({'color': 'rgb(100 75 3)'})
+          $('#svg-filter-lighting').attr('lighting-color', '#ffd16c')
         },
         setSilver() {
           this.photo = "img/coin.png"
+          $('.circle-wrapper p.circle').css({'color': 'rgb(0 0 0)'})
+          $('#svg-filter-lighting').attr('lighting-color', '#fff')
+        },
+        modalClose() {
+          this.isHideResult = true;
         }
         },
         computed: {
