@@ -3,7 +3,7 @@
       
       <div class="constructor-head">
         <div>
-          <h1>Конструктор монет</h1>
+          <h1>Конструктор медали</h1>
           <p class="posttitle">Создайте уникальный дизайн и оформите заказ</p>
         </div>
         <button class="make-order btn" @click="makeOrder"> <p>Создать заказ</p></button>
@@ -30,7 +30,7 @@
               <div class="modal-wrapper__content">
                 <a @click="modalClose" class="modal-wrapper__close material-icons">close</a>
                 <div :class="{'hide': isHideResult}" ref="result" id="result">
-                  <div class="image-preview image-preview--result"></div>
+                  <div :class="{'filtered': type.graving}" class="image-preview image-preview--result"></div>
                   <div class="circle-wrapper">
                     <p class="circle"></p>
                     <div class="circle-image">
@@ -46,7 +46,7 @@
           <div class="constructor__side constructor__settings">
             <div class="settings-block">
               <div class="settings-block__group">
-                <p class="settings-block__label">Текст на монете</p>
+                <p class="settings-block__label">Текст на медали</p>
                 <input class="settings-block__field" v-model="getText" />
               </div>
               <div class="settings-block__group">
@@ -57,7 +57,7 @@
           </div>
           <div class="settings-block">
             <div>
-              <p class="settings-block__label">Изображение на монете</p>
+              <p class="settings-block__label">Изображение на медали</p>
               <input class="settings-block__field" ref="fileUploaded" type="file" @input="onFileSelected">
            </div>
             
@@ -448,11 +448,19 @@ import UploadImage from '../components/UploadImage.vue';
         return {
             getText: "",
             getSize: 12,
+            photo: "img/coin.png",
             myVal: null,
             showResult: null,
             previewImage: null,
             isHideResult: true,
-            photo: "img/coin.png",
+            coin: {
+              type: "Гравировка",
+              material: "Серебро",
+              text: '',
+              size: '12',
+              photo: '',
+            },
+            
             width: 100,
             design: {
               gold: false,
@@ -463,6 +471,15 @@ import UploadImage from '../components/UploadImage.vue';
               colorPrint: false
             }
         }
+
+        },
+        watch: {
+          getText() {
+            this.coin.text = this.getText
+          },
+          getSize() {
+            this.coin.size = this.getSize
+          }
         },
         components: {
           UploadImage
@@ -493,18 +510,23 @@ import UploadImage from '../components/UploadImage.vue';
             imgResult.src = image64;
 
 
-
-            html2canvas(document.querySelector("#result")).then(function(canvas) {
+            html2canvas(document.querySelector("#result")).then((canvas) => {
               canvas.className = "test";
               let myscreen = canvas;
               var dataURL = canvas.toDataURL("image/png");
               document.getElementById("resultcanvas").appendChild(myscreen);
 
+              let index = Math.floor(Math.random() * (1000 - 100 + 1) + 100);
+            this.coin.photo = dataURL
+            localStorage.setItem(`order-${index}`, JSON.stringify(this.coin));
               // var newTab = window.open('about:blank','image from canvas');
               // newTab.document.write("<img src='" + dataURL + "' alt='from canvas'/>");
-              let index = Math.floor(Math.random() * (1000 - 100 + 1) + 100);
-              localStorage.setItem(`order-${index}`, JSON.stringify({photo: dataURL}));
+              
+
+              
+              
             })
+
            
             }, 1000)
 
@@ -527,6 +549,7 @@ import UploadImage from '../components/UploadImage.vue';
           this.photo = "img/coin2.png"
           this.design.silver = false
           this.design.gold = true
+          this.coin.material = "Золото"
           $('.circle-wrapper p.circle').css({'color': 'rgb(100 75 3)'})
           $('#svg-filter-lighting').attr('lighting-color', '#ffd16c')
         },
@@ -534,6 +557,7 @@ import UploadImage from '../components/UploadImage.vue';
           this.photo = "img/coin.png"
           this.design.silver = true
           this.design.gold = false
+          this.coin.material = "Серебро"
           $('.circle-wrapper p.circle').css({'color': 'rgb(0 0 0)'})
           $('#svg-filter-lighting').attr('lighting-color', '#fff')
         },
@@ -565,9 +589,11 @@ import UploadImage from '../components/UploadImage.vue';
         setGraving() {
           this.type.graving = true
           this.type.colorPrint = false
+          this.coin.type = "Гравировка"
           $('#svgImage').attr('filter', 'url(#light)')
         },
         setColorPrint() {
+          this.coin.type = "Цветная печать"
           this.type.graving = false
           this.type.colorPrint = true
           $('#svgImage').attr('filter', '')

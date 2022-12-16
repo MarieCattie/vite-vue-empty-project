@@ -14,7 +14,7 @@
        <div class="menu">
             <router-link class="button" to="/">
                 <span class="material-icons">palette</span>
-                <span class="text">Создание монеты</span>
+                <span class="text">Создание медали</span>
             </router-link>
             <router-link class="button" to="/about">
                 <span class="material-icons">receipt_long</span>

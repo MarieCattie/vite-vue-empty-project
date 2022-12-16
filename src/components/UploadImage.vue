@@ -83,7 +83,11 @@ export default {
         width: 220px;
         height: 220px;
         object-fit: cover;
-        filter: url(#light);
+        
+
+        &.filtered {
+            filter: url(#light);
+        }
     }
 }
 </style>
